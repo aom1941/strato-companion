@@ -1,0 +1,40 @@
+{
+  "name": "strato-companion",
+  "version": "0.1.0",
+  "description": "Intelligenter Companion & MCP Server für Strato HiDrive und Webhosting",
+  "main": "dist/index.js",
+  "bin": {
+    "strato-companion": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "mcp": "tsx src/index.ts mcp",
+    "cli": "tsx src/index.ts cli"
+  },
+  "keywords": [
+    "strato",
+    "hidrive",
+    "webhosting",
+    "mcp",
+    "backup",
+    "cli"
+  ],
+  "author": "Arne O. Mueller",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.6.0",
+    "commander": "^12.1.0",
+    "dotenv": "^16.4.7",
+    "ssh2": "^1.15.0",
+    "webdav": "^5.7.1",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "@types/ssh2": "^1.15.3",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
