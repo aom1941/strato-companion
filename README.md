@@ -1,81 +1,75 @@
 # 🚀 Strato Companion (MCP Server & CLI)
 
-Ein intelligenter **Companion & MCP Server** für **Strato HiDrive** und **Strato Webhosting**.
+Ein intelligenter **Companion & MCP Server** zur Nahtstellen-Automatisierung von **Strato HiDrive** (Cloud-Speicher) und **Strato Webhosting** (SSH, MariaDB/MySQL).
 
-Verbindet deine Strato Cloud-Infrastruktur mit KI-Assistenten (wie Antigravity / Claude) und bietet eine mächtige CLI für automatisierte Backups, Health-Monitoring und SSH-Verwaltung.
+![Status](https://img.shields.io/badge/Status-ACTIVE-10b981?style=for-the-badge)
+![Category](https://img.shields.io/badge/Category-01__PROJECT__COMPANION__OS-8b5cf6?style=for-the-badge)
+![Stack](https://img.shields.io/badge/Stack-TypeScript%20%7C%20Node.js-3b82f6?style=for-the-badge)
 
 ---
 
-## 🌟 Features
+## 🌟 Key Features & Capabilities
 
-* **🩺 Health & SSL Monitoring**: Überprüfe HTTP-Erreichbarkeit, Antwortzeiten und SSL-Zertifikate.
-* **📂 HiDrive WebDAV Integration**: Durchsuche, erstelle und lade Dateien auf deinen Strato HiDrive hoch.
+* **🩺 Health & SSL Monitoring**: Prüfe Uptime, Antwortzeiten und SSL-Zertifikate inkl. Restlaufzeit-Warnung.
+* **📂 HiDrive WebDAV Integration**: Durchsuche, erstelle und lade Dateien auf deinen Strato HiDrive Cloud-Speicher hoch.
 * **⚡ SSH Remote Dump**: Erstelle komprimierte MariaDB/MySQL `mysqldump` Backups direkt auf dem Webhosting per SSH und stream sie auf deinen HiDrive.
-* **🤖 MCP Protocol Ready**: Integrierter Model Context Protocol Server (Stdio Transport) für LLM-Agenten.
+* **🤖 MCP Protocol Ready**: Integrierter Model Context Protocol Server (Stdio Transport) für LLM-Agenten (wie Antigravity).
 
 ---
 
-## 🛠️ Installation & Setup
+## 🏗️ Architektur & Datenfluss
 
-1. **Repository klonen / installieren**:
-   ```bash
-   git clone https://github.com/youruser/strato-companion.git
-   cd strato-companion
-   npm install
-   ```
-
-2. **Umgebungsvariablen konfigurierten**:
-   Kopiere `.env.example` nach `.env` und trage deine Zugangsdaten ein:
-   ```bash
-   cp .env.example .env
-   ```
-
-3. **Projekt bauen**:
-   ```bash
-   npm run build
-   ```
+```mermaid
+graph TD
+    AI[Antigravity / LLM Agent] -->|MCP Protocol Stdio| MCP[MCP Server Layer]
+    CLI[Commander CLI] -->|Terminal Command| Core[Strato Companion Core]
+    
+    MCP --> Core
+    
+    Core -->|WebDAV / SFTP| HiDrive[Strato HiDrive Cloud]
+    Core -->|SSH / mysqldump| Hosting[Strato Webhosting]
+    Core -->|HTTP / TLS Check| Domain[Target Domain SSL]
+```
 
 ---
 
-## 💻 Benutzung
-
-### 1. CLI Modus
+## 🛠️ Installation & Schnellstart
 
 ```bash
-# Health & SSL Test ausführen
-npx tsx src/index.ts health --url https://strato.de
+# 1. In das Projektverzeichnis wechseln
+cd /Volumes/SSD-3/02_Projekte/01_PROJECT_COMPANION_OS/strato-companion
 
-# HiDrive Ordnerinhalt auflisten
-npx tsx src/index.ts hidrive-ls --path /
+# 2. Abhängigkeiten installieren & bauen
+npm install
+npm run build
 
-# DB-Backup erstellen und auf HiDrive sichern
-npx tsx src/index.ts backup-db --database meinedb
-```
-
-### 2. MCP Server Modus (für Antigravity / Claude Desktop)
-
-Trage den Companion in deine MCP-Konfiguration (`mcp_config.json` oder `settings.json`) ein:
-
-```json
-{
-  "mcpServers": {
-    "strato-companion": {
-      "command": "node",
-      "args": ["/path/to/strato-companion/dist/index.js", "mcp"],
-      "env": {
-        "STRATO_HIDRIVE_WEBDAV_URL": "https://webdav.hidrive.strato.com",
-        "STRATO_HIDRIVE_USERNAME": "dein_hidrive_user",
-        "STRATO_HIDRIVE_PASSWORD": "dein_hidrive_passwort",
-        "STRATO_WEBHOSTING_SSH_HOST": "ssh.strato.de",
-        "STRATO_WEBHOSTING_SSH_USER": "dein_ssh_user"
-      }
-    }
-  }
-}
+# 3. CLI Health Check ausführen
+node dist/index.js health --url https://strato.de
 ```
 
 ---
 
-## 📄 Lizenz
+## 📡 MCP Tools Registry
 
-MIT License
+| Tool Name | Parameter | Beschreibung |
+| :--- | :--- | :--- |
+| `strato_hidrive_list` | `path` | Listet Dateien und Ordner auf HiDrive via WebDAV auf. |
+| `strato_hidrive_get_quota` | - | Ruft Speicherauslastung und Quota des HiDrive-Kontos ab. |
+| `strato_webhosting_backup_db` | `db_name` | Erstellt SSH-`mysqldump` und lädt es komprimiert auf HiDrive. |
+| `strato_webhosting_exec_ssh` | `command` | Führt unkritische Shell-Befehle per SSH auf dem Hosting aus. |
+| `strato_health_check` | `url` | Prüft Erreichbarkeit, Latenz und SSL-Gültigkeit einer Domain. |
+
+---
+
+## 🔗 Repositories & Sync-Befehle
+
+| Host / Platform | Repository URL | Push Command |
+| :--- | :--- | :--- |
+| **Gitea (Self-Hosted)** | `ssh://git@192.168.2.109:2222/aom-git/strato-companion.git` | `git push origin main` |
+| **GitHub** | `https://github.com/aom1941/strato-companion.git` | `git push github main` |
+
+---
+
+## 📄 Autor & Lizenz
+
+MIT License • Arne O. Mueller (`admin@derarne.cloud`)
